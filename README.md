@@ -30,6 +30,15 @@ Trendora is a Flutter app template showcasing a typical e-commerce flavored flow
 - **Responsive UI** widgets and componentized structure
 - **Multi-platform** targets: Android, iOS, Web, Desktop
 
+## Screens
+- Home: `Screens/home_screen.dart`
+- Cart: `Screens/cart_page.dart`
+- Orders: `Screens/order_page.dart`
+- Account: `Screens/account_page.dart`
+- Notifications: `Screens/notification_screen.dart`
+
+Bottom navigation is implemented in `Core/Widget/bottom_nav_bar.dart` using a `StateProvider<int>` (`bottomnav_provider.dart`).
+
 ## Tech Stack
 - **Language**: Dart (Flutter)
 - **State Management**: `flutter_riverpod`
@@ -54,6 +63,15 @@ lib/
 assets/                        # App assets (icons, images)
 test/                          # Unit/widget tests
 ```
+
+### Architecture Overview
+- Entry point `main.dart` bootstraps `ProviderScope` and `MaterialApp`.
+- Navigation: `BottomNavBar` switches between core screens using Riverpod state.
+- Notifications data flow:
+  - `provider/notification_provider.dart` fetches JSON via `http`.
+  - Parses only the `data` array from the response and offloads JSON parsing to an isolate using `utils/json_parser.dart`.
+  - UI layer (`notification_screen.dart`) consumes the `FutureProvider` and renders `notification_Widget/notification_card.dart`.
+  - Model is defined in `models/notification_model.dart` (with generated `notification_model.g.dart`).
 
 ## Getting Started
 
@@ -128,6 +146,8 @@ If your API service requires environment-specific configuration, consider using 
 flutter run --dart-define=API_BASE_URL=https://api.example.com
 ```
 Access via `const String.fromEnvironment('API_BASE_URL')`.
+
+Current demo endpoints fetch from GitHub Raw; be aware of rate limits. A `User-Agent` header is set to avoid blocks.
 
 ## Troubleshooting
 - If code generation fails, run with `--delete-conflicting-outputs` as shown above.
